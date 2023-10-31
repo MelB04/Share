@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Liste des utilisateurs</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="fw-bold text-primary">
+                            <th scope="col">Email</th>
+                            <th scope="col">Date d’inscription</th>
+                            <th scope="col">Rôle</th>
+                            <th scope="col">Vérifié</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users |sort((a, b) => b.dateRegister <=> a.dateRegister) %}                           
+                        <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
+                                <td>{{ user.email |capitalize }}</td>
+                                <td>{{ user.dateRegister | date("d-m-Y à H:i:s") }}</td>
+                                {% if "ROLE_ADMIN" in user.roles[0] %}
+                                    <td>Administrateur</td>
+                                {% else %}                                   
+                                    {% if "ROLE_MOD" in user.roles[0] %}
+                                        <td>Modérateur</td>
+                                    {% else %}
+                                        <td>Utilisateur</td>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if  user.isVerified == 0 %}
+                                    <td>Non validé</td>
+                                {% else %}
+                                    <td>Oui</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
