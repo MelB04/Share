@@ -9,12 +9,14 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
             <div class="table-responsive">
+                {{ form_start(form) }}
                 <table class="table table-hover">
                     <thead>
                         <tr class="fw-bold text-primary">
                             <th scope="col">Nom</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
+                            <th scope="col">Supprimer Plusieurs</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,10 +25,13 @@
                                 <td>{{ categorie.libelle | capitalize }}</td>
                                 <td><a href="{{path('app_modif_categorie', {'id':categorie.id})}}" class="text-black"><i class="bi bi-pencil-square"></i></a></td>
                                 <td><a href="{{path('app_del_categorie', {'id':categorie.id})}}" class="text-black"><i class="bi bi-trash3-fill"></i></a></td>
+                                <td>{{ form_widget(form.categories[categorie.id]) }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                {{ form_widget(form.supprimer) }}
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

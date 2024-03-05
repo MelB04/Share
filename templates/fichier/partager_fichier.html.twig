@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{parent()}}Partager un fichier avec
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">
+			Partager un fichier avec
+		</h1>
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-6 bg-white p-4 m-0 text-primary">
+				<p>Nom :
+					{{fichier.nomOriginal}}</p>
+				<p>Propriétaire :
+					{{fichier.proprietaire.lastname}}-{{fichier.proprietaire.firstname}}</p>
+
+				{{form(form)}}
+
+				</div>
+			</div>
+
+		</div>
+	{% endblock %}

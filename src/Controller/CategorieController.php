@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\CategorieType;
+use App\Form\SupprimerCategorieType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Categorie;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,12 +38,27 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/private-liste-categories', name: 'app_liste_categories')]
-    public function listeCategories(CategorieRepository $categoriesRepository): Response
+    #[Route('/private-liste-categories', name: 'app_liste_categories', methods: ['GET', 'POST'])]
+    public function listeCategories(CategorieRepository $categoriesRepository, Request $request, EntityManagerInterface $em): Response
     {
         $categories = $categoriesRepository->findAll();
-        return $this->render('categorie/index.html.twig', [
+        $form = $this->createForm(SupprimerCategorieType::class, null, [
             'categories' => $categories
+            ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $selectedCategories = $form->get('categories')->getData();
+            foreach ($selectedCategories as $categorie) {
+                $em->remove($categorie);
+            }
+            $em->flush();
+            $this->addFlash('notice', 'Catégories supprimées avec succès');
+            return $this->redirectToRoute('app_liste_categories');
+        }  
+            
+        return $this->render('categorie/index.html.twig', [
+            'categories' => $categories,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -71,9 +87,11 @@ class CategorieController extends AbstractController
     #[Route('/private-del-categorie/{id}', name: 'app_del_categorie')]
     public function delCategorie(Categorie $categorie, EntityManagerInterface $em): Response ##categorie est l'entité qu'il doit aller chercher en fonction de l'id. Il comprend tout :)
     {
-        $em->remove($categorie); #permet de supprimer la catégorie, l'element complet ($categorie = toute l'entité)
-        $em->flush();
-        $this->addFlash('notice','Catégorie supprimée');
+        if($categorie!=null){
+            $em->remove($categorie);
+            $em->flush();
+            $this->addFlash('notice','Catégorie supprimée');
+        }
         return $this->redirectToRoute('app_liste_categories'); 
     }
 
