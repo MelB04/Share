@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use App\Repository\FichierRepository;
+use Exception;
 
 class BaseController extends AbstractController
 {
@@ -51,8 +52,12 @@ class BaseController extends AbstractController
         ];
 
         if (isset($_GET["email"]) && isset($_GET["mdp"])) {
-            $response["data"] = $userRepository->findAll()[0]->getJSON();
-            $response["state"] = "success";
+            $user = $userRepository->findOneBy(["email" => $_GET["email"]]);
+            if ($user != null) {
+                $response["data"] = $user->getJSON();
+                $response["state"] = "success";
+            } else
+                $response["message"] = "Pas trouvé le user !";
         } else {
             $response["message"] = "Pas toutes les variables donnees";
         }
