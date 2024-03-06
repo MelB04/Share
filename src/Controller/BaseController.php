@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,7 +28,17 @@ class BaseController extends AbstractController
     }
 
     #[Route('/api', name: 'app_api')]
-    public function api(): Response
+    public function api()
+    {
+        return new JsonResponse([
+            "data" => json_encode([
+                "test" => "salut"
+            ])
+        ]);
+    }
+
+    #[Route('/api-connectuser', name: 'app_api-connectuser')]
+    public function apiconnectuser(): Response
     {
         return $this->render('base/api.html.twig', []);
     }
