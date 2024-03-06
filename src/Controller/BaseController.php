@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
 
 class BaseController extends AbstractController
 {
@@ -27,6 +28,8 @@ class BaseController extends AbstractController
         return $this->render('base/mentionslegales.html.twig', []);
     }
 
+    //API
+
     #[Route('/api', name: 'app_api')]
     public function api()
     {
@@ -38,8 +41,21 @@ class BaseController extends AbstractController
     }
 
     #[Route('/api-connectuser', name: 'app_api-connectuser')]
-    public function apiconnectuser(): Response
+    public function apiconnectuser(UserRepository $userRepository): Response
     {
-        return $this->render('base/api.html.twig', []);
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
+
+        if (isset($_GET["email"]) && isset($_GET["mdp"])) {
+            $response["data"] = $userRepository->findAll();
+            $response["state"] = "success";
+        } else {
+            $response["message"] = "Pas toutes les variables donnees";
+        }
+
+        return new JsonResponse($response);
     }
 }
