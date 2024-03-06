@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use App\Repository\FichierRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Exception;
 
 class BaseController extends AbstractController
@@ -75,8 +76,24 @@ class BaseController extends AbstractController
         ];
 
         if (isset($_GET["id"])) {
-            $id = htmlspecialchars($_GET["id"]);
-            $nom_serveur = $fichierRepository->findOneBy((['id' => $id]))->getNomServeur();
+            $id = $_GET["id"];
+            $fichier = $fichierRepository->findOneBy((['id' => $id]));
+            $proprietaire_id = $fichier->getProprietaireId();
+            $nom_original = $fichier->getNomOriginal();
+            $nom_serveur = $fichier->getNomServeur();
+            $date_envoi = $fichier->getDateEnvoi();
+            $extension = $fichier->getExtension();
+            $taille = $fichier->getTaille();
+            $array_fichier = [
+                "id" => $id,
+                "proprietaire_id" => $proprietaire_id,
+                "nom_original" => $nom_original,
+                "nom_serveur" => $nom_serveur,
+                "date_envoi" => $date_envoi,
+                "extension" => $extension,
+                "taille" => $taille
+            ];
+            $response["data"] = $array_fichier;
             $response["state"] = "success";
         } else {
             $response["state"] = "fail";
@@ -96,13 +113,13 @@ class BaseController extends AbstractController
         ];
 
         if (isset($_GET["proprietaire_id"])) {
-            $proprietaire_id = htmlspecialchars($_GET["proprietaire_id"]);
+            $proprietaire_id = $_GET["proprietaire_id"];
             $fichiers = $fichierRepository->findBy((['proprietaire' => $proprietaire_id]));
             $responseDataArray = [];
             if (!empty($fichiers)) {
                 foreach ($fichiers as $fichier) {
                     $id = $fichier->getId();
-                    $proprietaire_id = $fichier->getProprietaire();
+                    $proprietaire_id = $fichier->getProprietaireId();
                     $nom_original = $fichier->getNomOriginal();
                     $nom_serveur = $fichier->getNomServeur();
                     $date_envoi = $fichier->getDateEnvoi();
