@@ -214,7 +214,7 @@ class Fichier
         return $this;
     }
 
-    public function getProprietaireId(): ?string
+    public function getProprietaireName(): ?string
     {
         return $this->proprietaire->getLastname() ." ". $this->proprietaire->getFirstname();
     }

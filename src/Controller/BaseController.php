@@ -166,7 +166,7 @@ class BaseController extends AbstractController
             $responseDataArray = [];
             if (!empty($fichier)) {
                 $id = $fichier->getId();
-                $proprietaire_id = $fichier->getProprietaireId();
+                $proprietaire_name = $fichier->getProprietaireName();
                 $nom_original = $fichier->getNomOriginal();
                 $nom_serveur = $fichier->getNomServeur();
                 $date_envoi = $fichier->getDateEnvoi();
@@ -177,7 +177,7 @@ class BaseController extends AbstractController
                 $taille = $fichier->getTaille();
                 $array_fichier = [
                     "id" => $id,
-                    "proprietaire_id" => $proprietaire_id,
+                    "proprietaire_name" => $proprietaire_name,
                     "nom_original" => $nom_original,
                     "nom_serveur" => $nom_serveur,
                     "date_envoi" => $date_envoi,
