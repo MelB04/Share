@@ -60,8 +60,8 @@ class BaseController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/api-getcheminfichier', name: 'app_api-getcheminfichier')]
-    public function apigetcheminfichier(FichierRepository $fichierRepository): Response
+    #[Route('/api-getfichier', name: 'app_api-getfichier')]
+    public function apigetfichier(FichierRepository $fichierRepository): Response
     {
         $response = [
             "data" => [],
@@ -71,13 +71,60 @@ class BaseController extends AbstractController
 
         if (isset($_GET["id"])) {
             $id = htmlspecialchars($_GET["id"]);
-            $response["data"] = $fichierRepository->findOneBy((['id' => $id]))->getNomServeur();
+            $nom_serveur = $fichierRepository->findOneBy((['id' => $id]))->getNomServeur();
             $response["state"] = "success";
         } else {
             $response["state"] = "fail";
             $response["message"] = "Pas toutes les variables donnees";
         }
 
+        return new JsonResponse($response);
+    }
+
+    #[Route('/api-getfichiers', name: 'app_api-getfichiers')]
+    public function apigetfichiers(FichierRepository $fichierRepository): Response
+    {
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
+
+        if (isset($_GET["proprietaire_id"])) {
+            $proprietaire_id = htmlspecialchars($_GET["proprietaire_id"]);
+            $fichiers = $fichierRepository->findBy((['proprietaire' => $proprietaire_id]));
+            $responseDataArray = [];
+            if (!empty($fichiers)) {
+                foreach ($fichiers as $fichier) {
+                    $id = $fichier->getId();
+                    $proprietaire_id = $fichier->getProprietaire();
+                    $nom_original = $fichier->getNomOriginal();
+                    $nom_serveur = $fichier->getNomServeur();
+                    $date_envoi = $fichier->getDateEnvoi();
+                    $extension = $fichier->getExtension();
+                    $taille = $fichier->getTaille();
+                    $array_fichier = [
+                        "id" => $id,
+                        "proprietaire_id" => $proprietaire_id,
+                        "nom_original" => $nom_original,
+                        "nom_serveur" => $nom_serveur,
+                        "date_envoi" => $date_envoi,
+                        "extension" => $extension,
+                        "taille" => $taille
+                    ];
+                    array_push($responseDataArray, $array_fichier);
+                }
+                $response["data"] = $responseDataArray;
+                $response["state"] = "success";
+                
+            } else {
+                $response["state"] = "fail";
+                $response["message"] = "Aucun fichiers";
+            }
+        } else {
+            $response["state"] = "fail";
+            $response["message"] = "Pas toutes les variables donnees";
+        }
         return new JsonResponse($response);
     }
 }
