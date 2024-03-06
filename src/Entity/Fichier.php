@@ -208,4 +208,10 @@ class Fichier
 
         return $this;
     }
+
+    public function getProprietaireId(): ?string
+    {
+        return $this->proprietaire->getLastname() ." ". $this->proprietaire->getFirstname();
+    }
 }
+

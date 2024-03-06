@@ -124,7 +124,57 @@ class BaseController extends AbstractController
                 
             } else {
                 $response["state"] = "fail";
-                $response["message"] = "Aucun fichiers";
+                $response["message"] = "Aucun fichier";
+            }
+        } else {
+            $response["state"] = "fail";
+            $response["message"] = "Pas toutes les variables donnees";
+        }
+        return new JsonResponse($response);
+    }
+
+
+    #[Route('/api-getfichierByInfo', name: 'app_api-getfichierByInfo')]
+    public function apigetfichierByInfo(FichierRepository $fichierRepository): Response
+    {
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
+
+        if (isset($_GET["idFichier"])) {
+            $idFichier = $_GET["idFichier"];
+            $fichier = $fichierRepository->findOneBy((['id' => $idFichier]));
+            $responseDataArray = [];
+            if (!empty($fichier)) {
+                $id = $fichier->getId();
+                $proprietaire_id = $fichier->getProprietaireId();
+                $nom_original = $fichier->getNomOriginal();
+                $nom_serveur = $fichier->getNomServeur();
+                $date_envoi = $fichier->getDateEnvoi();
+                $extension = $fichier->getExtension();
+                $categorie = $fichier->getCategories();
+
+                $usersPartagees = $fichier->getUser();
+                $taille = $fichier->getTaille();
+                $array_fichier = [
+                    "id" => $id,
+                    "proprietaire_id" => $proprietaire_id,
+                    "nom_original" => $nom_original,
+                    "nom_serveur" => $nom_serveur,
+                    "date_envoi" => $date_envoi,
+                    "extension" => $extension,
+                    "categorie" => $categorie,
+                    "usersPartagees" => $usersPartagees,
+                    "taille" => $taille
+                ];
+                $response["data"] = $array_fichier;
+                $response["state"] = "success";
+                
+            } else {
+                $response["state"] = "fail";
+                $response["message"] = "Aucun fichier";
             }
         } else {
             $response["state"] = "fail";
