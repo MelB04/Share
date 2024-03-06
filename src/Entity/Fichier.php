@@ -121,6 +121,11 @@ class Fichier
         return $this->proprietaire;
     }
 
+    public function getProprietaireId(): ?int
+    {
+        return $this->proprietaire->getId();
+    }
+
     public function setProprietaire(?User $proprietaire): static
     {
         $this->proprietaire = $proprietaire;
