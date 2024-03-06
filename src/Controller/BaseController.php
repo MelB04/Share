@@ -50,7 +50,7 @@ class BaseController extends AbstractController
         ];
 
         if (isset($_GET["email"]) && isset($_GET["mdp"])) {
-            $response["data"] = $userRepository->findAll();
+            $response["data"] = $userRepository->findAll()[0]->getJSON();
             $response["state"] = "success";
         } else {
             $response["message"] = "Pas toutes les variables donnees";
