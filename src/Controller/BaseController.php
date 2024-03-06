@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
+use App\Repository\FichierRepository;
 
 class BaseController extends AbstractController
 {
@@ -53,6 +54,27 @@ class BaseController extends AbstractController
             $response["data"] = $userRepository->findAll();
             $response["state"] = "success";
         } else {
+            $response["message"] = "Pas toutes les variables donnees";
+        }
+
+        return new JsonResponse($response);
+    }
+
+    #[Route('/api-getcheminfichier', name: 'app_api-getcheminfichier')]
+    public function apigetcheminfichier(FichierRepository $fichierRepository): Response
+    {
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
+
+        if (isset($_GET["id"])) {
+            $id = htmlspecialchars($_GET["id"]);
+            $response["data"] = $fichierRepository->findOneBy((['id' => $id]))->getNomServeur();
+            $response["state"] = "success";
+        } else {
+            $response["state"] = "fail";
             $response["message"] = "Pas toutes les variables donnees";
         }
 
