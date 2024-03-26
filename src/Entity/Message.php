@@ -7,29 +7,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
+#[ApiResource(paginationItemsPerPage: 10,operations: [
+    new GetCollection(normalizationContext: ['groups' => 'message:list']),
+    new Post(),
+    new Get(normalizationContext: ['groups' => 'message:item']),
+    new Put(),
+    new Patch(),
+    new Delete(),
+    ],)]
+
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
+#[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'title' => 'ASC'])]
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['message:list', 'message:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['message:list', 'message:item'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['message:list', 'message:item'])]
     private ?\DateTimeInterface $datePost = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['message:list', 'message:item'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['message:list', 'message:item'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'messages')]
+    #[Groups(['message:list', 'message:item'])]
     private ?self $parent = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
