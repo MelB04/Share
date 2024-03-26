@@ -15,5 +15,12 @@ api_platform:
             standard_put: true
             rfc_7807_compliant_errors: true
         pagination_items_per_page: 10
+        normalization_context:
+            skip_null_values: true
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false

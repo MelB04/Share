@@ -27,7 +27,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     new Post(),
     new Get(normalizationContext: ['groups' => 'user:item']),
     new Put(),
-    new Patch(),
+    new Patch(security: "is_granted('ROLE_ADMIN') or object == user"),
     new Delete(),
     ])]
 
