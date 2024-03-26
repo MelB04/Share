@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use App\Repository\FichierRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class BaseController extends AbstractController
@@ -103,8 +104,9 @@ class BaseController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/api-getfichiers', name: 'app_api-getfichiers')]
-    public function apigetfichiers(FichierRepository $fichierRepository): Response
+    
+    #[Route('/api-updateuser', name: 'app_api-updateuser')]
+    public function apiupdateuser(UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $response = [
             "data" => [],
@@ -112,6 +114,37 @@ class BaseController extends AbstractController
             "message" => ""
         ];
 
+        if (isset($_GET["id"])) {
+            $id = htmlspecialchars($_GET["id"]);
+            $utilisateur= $userRepository->findOneBy((['id' => $id]));
+            if (isset($_GET["firstname"])) {
+                $firstname = htmlspecialchars($_GET["firstname"]);
+                $utilisateur->setFirstname($firstname);
+            }
+            if (isset($_GET["lastname"])) {
+                $lastname = htmlspecialchars($_GET["lastname"]);
+                $utilisateur->setLastname($lastname);
+            }
+            $em->persist($utilisateur);
+            $em->flush();
+        $response["data"] = $userRepository->findOneBy((['id' => $id]))->getJSON();
+        $response["state"] = "success";
+    } else {
+        $response["message"] = "Pas toutes les variables donnees";
+    }
+
+        return new JsonResponse($response);
+    }
+        
+
+#[Route('/api-getfichiers', name: 'app_api-getfichiers')]
+public function apigetfichiers(FichierRepository $fichierRepository): Response
+{
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
         if (isset($_GET["proprietaire_id"])) {
             $proprietaire_id = $_GET["proprietaire_id"];
             $fichiers = $fichierRepository->findBy((['proprietaire' => $proprietaire_id]));
