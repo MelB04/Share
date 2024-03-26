@@ -19,7 +19,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for contact in contacts |sort((a, b) => b.dateEnvoi <=> a.dateEnvoi) %}            /// si le a est inferieur à b alors on fait ca et ensuite ca            
+                         <!-- si le a est inferieur à b alors on fait ca et ensuite ca -->
+                        {% for contact in contacts |sort((a, b) => b.dateEnvoi <=> a.dateEnvoi) %}            
                         <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
                                 <td>{{ contact.nom |capitalize }}</td>
                                 <td>{{ contact.sujet | capitalize }}</td>
