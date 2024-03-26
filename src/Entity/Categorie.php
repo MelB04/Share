@@ -66,4 +66,12 @@ class Categorie
 
         return $this;
     }
+
+    public function getJSONCategorie()
+    {
+        return json_encode([
+            "libelle" => $this->getLibelle(),
+            "id" => $this->getId(),
+        ]);
+    }
 }

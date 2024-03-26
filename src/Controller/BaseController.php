@@ -137,6 +137,60 @@ class BaseController extends AbstractController
                     array_push($responseDataArray, $array_fichier);
                 }
                 $response["data"] = $responseDataArray;
+                $response["state"] = "success"; 
+            } else {
+                $response["state"] = "fail";
+                $response["message"] = "Aucun fichier";
+            }
+        } else {
+            $response["state"] = "fail";
+            $response["message"] = "Pas toutes les variables donnees";
+        }
+        return new JsonResponse($response);
+    }
+
+    #[Route('/api-getfichiersPartageWithMe', name: 'app_api-getfichiersPartageWithMe')]
+    public function getfichiersPartageWithMe(FichierRepository $fichierRepository): Response
+    {
+        $response = [
+            "data" => [],
+            "state" => "fail",
+            "message" => ""
+        ];
+
+        if (isset($_GET["me"])) {
+            $me = $_GET["me"];
+            $fichiersPartages = $fichierRepository->findAll();
+
+            $responseDataArray = [];
+            if (!empty($fichiersPartages)) {
+                foreach ($fichiersPartages as $fichier) {
+                    $usersPartagees = $fichier->getUser();
+                    foreach ($usersPartagees as $user) {
+                        $idUserPartage = $user->getId();
+
+                        if ($me == $idUserPartage){
+                            $id = $fichier->getId();
+                            $proprietaire_id = $fichier->getProprietaireId();
+                            $nom_original = $fichier->getNomOriginal();
+                            $nom_serveur = $fichier->getNomServeur();
+                            $date_envoi = $fichier->getDateEnvoi();
+                            $extension = $fichier->getExtension();
+                            $taille = $fichier->getTaille();
+                            $array_fichier = [
+                                "id" => $id,
+                                "proprietaire_id" => $proprietaire_id,
+                                "nom_original" => $nom_original,
+                                "nom_serveur" => $nom_serveur,
+                                "date_envoi" => $date_envoi,
+                                "extension" => $extension,
+                                "taille" => $taille
+                            ];
+                            array_push($responseDataArray, $array_fichier); 
+                        }
+                    }
+                }
+                $response["data"] = $responseDataArray;
                 $response["state"] = "success";
                 
             } else {
@@ -163,7 +217,8 @@ class BaseController extends AbstractController
         if (isset($_GET["idFichier"])) {
             $idFichier = $_GET["idFichier"];
             $fichier = $fichierRepository->findOneBy((['id' => $idFichier]));
-            $responseDataArray = [];
+            $responseCategorieArray = [];
+            $responseUsersArray = [];
             if (!empty($fichier)) {
                 $id = $fichier->getId();
                 $proprietaire_name = $fichier->getProprietaireName();
@@ -171,9 +226,28 @@ class BaseController extends AbstractController
                 $nom_serveur = $fichier->getNomServeur();
                 $date_envoi = $fichier->getDateEnvoi();
                 $extension = $fichier->getExtension();
-                $categorie = $fichier->getCategories();
-
+                $categories = $fichier->getCategories();
+                if (!empty($categories)) {
+                    foreach ($categories as $categorie) {
+                        $array_categorie = [
+                            "id" => $categorie->getId(),
+                            "libelle" => $categorie->getLibelle(),
+                        ];
+                        array_push($responseCategorieArray, $array_categorie); 
+                    }
+                }
                 $usersPartagees = $fichier->getUser();
+                if (!empty($usersPartagees)) {
+                    foreach ($usersPartagees as $user) {
+                        $array_user = [
+                            "email" => $user->getEmail(),
+                            "id" => $user->getId(),
+                            "firstname" => $user->getFirstname(),
+                            "lastname" => $user->getLastname(),
+                        ];
+                        array_push($responseUsersArray, $array_user); 
+                    }
+                }
                 $taille = $fichier->getTaille();
                 $array_fichier = [
                     "id" => $id,
@@ -182,8 +256,8 @@ class BaseController extends AbstractController
                     "nom_serveur" => $nom_serveur,
                     "date_envoi" => $date_envoi,
                     "extension" => $extension,
-                    "categorie" => $categorie,
-                    "usersPartagees" => $usersPartagees,
+                    "usersPartagees" => $responseUsersArray,
+                    "categorie" => $responseCategorieArray,
                     "taille" => $taille
                 ];
                 $response["data"] = $array_fichier;
