@@ -24,8 +24,8 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
     new Post(),
     new Get(normalizationContext: ['groups' => 'message:item']),
     new Put(),
-    new Patch(),
-    new Delete(),
+    new Patch(security: "object.user == user"),
+    new Delete(security: "is_granted('ROLE_ADMIN') or object.user == user"),
     ],)]
 
 #[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]

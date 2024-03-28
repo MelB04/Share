@@ -63,11 +63,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateRegister = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:list', 'user:item','message:list', 'message:item'])]
+    #[Groups(['user:list', 'user:item','message:list', 'message:item', 'fichier:item'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:list', 'user:item','message:list', 'message:item'])]
+    #[Groups(['user:list', 'user:item','message:list', 'message:item', 'fichier:item'])]
     private ?string $firstname = null;
 
     #[ORM\OneToMany(mappedBy: 'proprietaire', targetEntity: Fichier::class, orphanRemoval: true)]

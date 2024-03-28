@@ -25,6 +25,7 @@ class Categorie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['fichier:item'])]
     private ?string $libelle = null;
 
     #[ORM\ManyToMany(targetEntity: Fichier::class, inversedBy: 'categories')]
