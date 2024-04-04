@@ -24,12 +24,12 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource(paginationItemsPerPage: 10, operations: [
     new GetCollection(normalizationContext: ['groups' => 'user:list']),
-    new Post(),
+    new Post(security: "false"),
     new Get(normalizationContext: ['groups' => 'user:item']),
     new Put(),
     new Patch(security: "is_granted('ROLE_ADMIN') or object == user"),
     new Delete(),
-    ])]
+])]
 
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'lastname' => 'exact', 'firstname' => 'partial'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -63,11 +63,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateRegister = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:list', 'user:item','message:list', 'message:item', 'fichier:item'])]
+    #[Groups(['user:list', 'user:item', 'message:list', 'message:item', 'fichier:item'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:list', 'user:item','message:list', 'message:item', 'fichier:item'])]
+    #[Groups(['user:list', 'user:item', 'message:list', 'message:item', 'fichier:item'])]
     private ?string $firstname = null;
 
     #[ORM\OneToMany(mappedBy: 'proprietaire', targetEntity: Fichier::class, orphanRemoval: true)]

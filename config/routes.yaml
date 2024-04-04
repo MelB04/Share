@@ -7,3 +7,9 @@ controllers:
 authentication_token:
   path: /api/authentication_token
   methods: ['POST']
+
+registration:
+    path: /api/register
+    controller: App\Controller\RegistrationController::register
+    methods: ['POST']
+    stateless: false
