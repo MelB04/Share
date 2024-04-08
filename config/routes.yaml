@@ -10,6 +10,6 @@ authentication_token:
 
 registration:
     path: /api/register
-    controller: App\Controller\RegistrationController::register
+    controller: App\Controller\RegistrationController::registerapi
     methods: ['POST']
     stateless: false
