@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource(paginationItemsPerPage: 10,operations: [
     new GetCollection(normalizationContext: ['groups' => 'message:list']),
@@ -28,7 +29,8 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
     new Delete(security: "is_granted('ROLE_ADMIN') or object.user == user"),
     ],)]
 
-#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
+#[ApiFilter(ExistsFilter::class, properties: ['parent'])]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact', 'parent'=> 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'title' => 'ASC'])]
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
