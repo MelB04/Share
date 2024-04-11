@@ -21,13 +21,14 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\State\UserStateProcessor;
 
 #[ApiResource(paginationItemsPerPage: 10, operations: [
     new GetCollection(normalizationContext: ['groups' => 'user:list']),
     new Post(security: "false"),
     new Get(normalizationContext: ['groups' => 'user:item']),
     new Put(),
-    new Patch(security: "is_granted('ROLE_ADMIN') or object == user"),
+    new Patch(security: "is_granted('ROLE_ADMIN') or object == user", processor: UserStateProcessor::class),
     new Delete(),
 ])]
 
@@ -71,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $firstname = null;
 
     #[ORM\OneToMany(mappedBy: 'proprietaire', targetEntity: Fichier::class, orphanRemoval: true)]
+    #[Groups(['user:item'])]
     private Collection $fichiers;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Telecharger::class, orphanRemoval: true)]
