@@ -22,7 +22,7 @@ use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource(paginationItemsPerPage: 100,operations: [
     new GetCollection(normalizationContext: ['groups' => 'message:list']),
-    new Post(security: "object.user == user"),
+    new Post(security: "is_granted('ROLE_USER')"),
     new Get(normalizationContext: ['groups' => 'message:item']),
     new Put(),
     new Patch(security: "object.user == user"),
