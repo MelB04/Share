@@ -62,7 +62,7 @@ class Message
     #[Groups(['message:list', 'message:item'])]
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade:["remove"])]
     private Collection $messages;
 
     public function __construct()
