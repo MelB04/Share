@@ -64,7 +64,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerapi', name: 'app_register')]
+    #[Route('/registerapi', name: 'app_registerapi')]
     public function registerapi(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         

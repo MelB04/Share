@@ -4,10 +4,17 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use App\Entity\Fichier;
 use App\Repository\UserRepository;
 use App\Repository\FichierRepository;
+use App\Repository\CategorieRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -305,5 +312,24 @@ public function apigetfichiers(FichierRepository $fichierRepository): Response
             $response["message"] = "Pas toutes les variables donnees";
         }
         return new JsonResponse($response);
+    }
+
+    #[Route('/api-downloadfichier', name: 'app_api-downloadfichier')]
+    public function downloadFile(Request $request) : Response
+    {
+        $fileName = $request->query->get('fileName');
+
+        if (!file_exists("/var/www/html/share-melanie/Share/uploads/fichiers/".$fileName)) {
+            return new Response('Fichier introuvable', Response::HTTP_NOT_FOUND);
+        }
+
+        $response = new BinaryFileResponse("/var/www/html/share-melanie/Share/uploads/fichiers/".$fileName);
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            basename($fileName)
+        ));
+
+        return $response;
     }
 }
