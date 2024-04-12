@@ -25,7 +25,7 @@ use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
     new Post(security: "is_granted('ROLE_USER')"),
     new Get(normalizationContext: ['groups' => 'message:item']),
     new Put(),
-    new Patch(security: "object.user == user"),
+    new Patch(security:"object.user == user"),
     new Delete(security: "is_granted('ROLE_ADMIN') or object.user == user"),
     ],)]
 
@@ -56,13 +56,13 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['message:list', 'message:item'])]
-    private ?User $user = null;
+    public ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'messages')]
     #[Groups(['message:list', 'message:item'])]
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade:["remove"])]
     private Collection $messages;
 
     public function __construct()
