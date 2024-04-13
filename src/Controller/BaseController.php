@@ -319,8 +319,8 @@ public function apigetfichiers(FichierRepository $fichierRepository): Response
     {
         $fileName = $request->query->get('fileName');
 
-        if (!file_exists("/var/www/html/share-melanie/Share/uploads/fichiers/".$fileName)) {
-            return new Response('Fichier introuvable', Response::HTTP_NOT_FOUND);
+        if (!file_exists("../uploads/fichiers/".$fileName)) {
+            return new Response("Fichier introuvable", Response::HTTP_NOT_FOUND);
         }
 
         $response = new BinaryFileResponse("/var/www/html/share-melanie/Share/uploads/fichiers/".$fileName);
