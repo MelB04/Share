@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FichierRepository;
+use App\Controller\PostFichierController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -17,10 +18,13 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ApiResource(paginationItemsPerPage: 100,operations: [
     new GetCollection(normalizationContext: ['groups' => 'fichier:list']),
-    new Post(),
+    new Post(deserialize: false,
+            controller: PostFichierController::class),
     new Get(normalizationContext: ['groups' => 'fichier:item']),
     new Put(),
     new Patch(),
@@ -29,6 +33,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiFilter(SearchFilter::class, properties: ['proprietaire' => 'exact', 'user'=>'exact'])]
 #[ORM\Entity(repositoryClass: FichierRepository::class)]
+#[Vich\Uploadable]
 class Fichier
 {
     #[ORM\Id]
@@ -36,6 +41,12 @@ class Fichier
     #[ORM\Column]
     #[Groups(['fichier:list', 'fichier:item'])]
     private ?int $id = null;
+
+    #[Vich\UploadableField(mapping: 'files', fileNameProperty: 'nomServeur', size: 'taille')]
+    private ?File $file = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['fichier:list', 'fichier:item'])]
@@ -84,6 +95,20 @@ class Fichier
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setFile(?File $file = null): void
+    {
+        $this->file = $file;
+
+        if (null !== $file) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
     }
 
     public function getNomOriginal(): ?string
