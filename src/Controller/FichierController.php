@@ -113,20 +113,17 @@ class FichierController extends AbstractController
                     $nomFichier = $nomFichier.'-'.uniqid().'.'.$fichier->guessExtension();
                     try{                 
                         $f = new Fichier();
-                        $f->setNomServeur($nomFichier);
                         $f->setNomOriginal($fichier->getClientOriginalName());
                         $f->setDateEnvoi(new \Datetime());
                         $f->setExtension($fichier->guessExtension());
-                        $f->setTaille($fichier->getSize());
                         $f->setProprietaire($this->getUser());
+                        $f->setFile($fichier);
                        
                         $categories = $form->get('categorie')->getData();
                         foreach ($categories as $categorie){
                             $c = $categoriesRepository->find($categorie);
                             $f -> addCategory($c);                            
                         }
-
-                        $fichier->move($this->getParameter('file_directory'), $nomFichier);
                         $this->addFlash('notice', 'Fichier envoyé');  
                     }
                     catch(FileException $e){
