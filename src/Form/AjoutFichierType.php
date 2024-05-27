@@ -27,7 +27,7 @@ class AjoutFichierType extends AbstractType
                 'download_label' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '200M',
+                        'maxSize' => 200 * 1024 * 1024,
                         'mimeTypes' => [
                             'application/pdf',
                             'image/jpeg',

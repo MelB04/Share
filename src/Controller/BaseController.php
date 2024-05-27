@@ -323,7 +323,7 @@ public function apigetfichiers(FichierRepository $fichierRepository): Response
             return new Response("Fichier introuvable", Response::HTTP_NOT_FOUND);
         }
 
-        $response = new BinaryFileResponse("/var/www/html/share-melanie/Share/uploads/fichiers/".$fileName);
+        $response = new BinaryFileResponse($this->getParameter('file_directory').'/'.$fileName);
         $response->headers->set('Content-Type', 'application/octet-stream');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
