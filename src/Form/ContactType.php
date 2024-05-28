@@ -16,11 +16,17 @@ class ContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', TextType::class, ['attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=>'fw-bold']])
-            ->add('sujet', TextType::class, ['attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=>'fw-bold']])
-            ->add('email', EmailType::class, ['attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
-            ->add('message', TextareaType::class, ['attr' => ['class'=> 'form-control', 'rows'=>'7', 'cols' => '7'], 'label_attr' => ['class'=> 'fw-bold']])
-            ->add('envoyer', SubmitType::class, ['attr' => ['class'=> 'btn bg-primary text-white m-4' ],'row_attr' => ['class' => 'text-center'],])
+            ->add('nom', TextType::class, ['attr' => 
+            ['class'=> 'form-control'], 'label_attr' => ['class'=>'fw-bold']])
+            ->add('sujet', TextType::class, ['attr' => 
+            ['class'=> 'form-control'], 'label_attr' => ['class'=>'fw-bold']])
+            ->add('email', EmailType::class, ['attr' => 
+            ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
+            ->add('message', TextareaType::class, ['attr' => 
+            ['class'=> 'form-control', 'rows'=>'7', 'cols' => '7'], 'label_attr' => 
+            ['class'=> 'fw-bold']])
+            ->add('envoyer', SubmitType::class, ['attr' => 
+            ['class'=> 'btn bg-primary text-white m-4' ],'row_attr' => ['class' => 'text-center'],])
         ;
     }
 

@@ -21,7 +21,8 @@ class SupprimerCategorieType extends AbstractType
             'expanded' => true,
             'multiple' => true,
             'label' => false, 'mapped' => false])
-        ->add('supprimer', SubmitType::class, ['attr' => ['class'=> 'btn bg-primary text-white m-4' ],
+        ->add('supprimer', SubmitType::class, ['attr' => 
+        ['class'=> 'btn bg-primary text-white m-4' ],
             'row_attr' => ['class' => 'text-center'],]);
     }
 

@@ -1,7 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{parent()}}A propos{% endblock %}
+{% block title %}{{ parent() }}A propos{% endblock %}
 
 {% block body %}
-    <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold"> A PROPOS</h1>
+    <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">A PROPOS</h1>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="my-4">Les créateurs</h1>
+                <p>
+                    Nous sommes tous élèves de deuxième année BTS SIO option SLAM. Ce projet rentre dans le cadre de notre Epreuve E5 de BTS SIO (option SLAM).
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            {% for createur in createurs %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="{{ createur.url }}" target="_blank" class="text-decoration-none">
+                        <div class="item-container" style="background-color: {{ createur.backgroundColor }};">
+                            <h2>{{ createur.title }}</h2>
+                            <p>{{ createur.role }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .item-container {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+        }
+    </style>
 {% endblock %}

@@ -30,7 +30,39 @@ class BaseController extends AbstractController
     #[Route('/apropos', name: 'app_apropos')]
     public function apropos(): Response
     {
-        return $this->render('base/apropos.html.twig', []);
+        $createurs = [
+            [
+                'id' => 1,
+                'title' => 'Mélanie BOUDRY',
+                'role' => 'Etudiante',
+                'backgroundColor' => '#F05C5C',
+                'url' => 'https://s4-8111.nuage-peda.fr/portfolio-mboudry/',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Agathe POTEAUX',
+                'role' => 'Etudiante',
+                'backgroundColor' => '#87C48A',
+                'url' => 'https://s4-8110.nuage-peda.fr/Portfolio/',
+            ],
+            [
+                'id' => 3,
+                'title' => 'Antoine BRUYE',
+                'role' => 'Etudiant',
+                'backgroundColor' => '#7A93EE',
+                'url' => 'https://s4-8058.nuage-peda.fr/Portfolio/',
+            ],
+            [
+                'id' => 4,
+                'title' => 'Clément PARISOT',
+                'role' => 'Etudiant',
+                'backgroundColor' => '#EE8AFE',
+                'url' => 'https://superkiment.fr/',
+            ],
+        ];
+        return $this->render('base/apropos.html.twig', [
+            'createurs'=>$createurs
+        ]);
     }
 
     #[Route('/mentionslegales', name: 'app_mentionslegales')]
